@@ -2,6 +2,7 @@
 
 namespace tdt4237\webapp\controllers;
 
+use tdt4237\webapp\Hash;
 use tdt4237\webapp\models\Phone;
 use tdt4237\webapp\models\Email;
 use tdt4237\webapp\models\User;
@@ -67,11 +68,13 @@ class UsersController extends Controller
 
         if ($validation->isGoodToGo()) {
             $password = $password;
-            $password = $this->hash->make($password);
-            $user = new User($username, $password, $firstName, $lastName, $phone, $company);
+            $hasher = new Hash();
+            $password = $hasher->make($password);
+            $salt = $hasher->getSalt();
+            $user = new User($username, $password, $firstName, $lastName, $phone, $company, $salt);
             $this->userRepository->save($user);
 
-            $this->app->flash('info', 'Thanks for creating a user. Now log in.');
+            $this->app->flash('info', $salt);
             return $this->app->redirect('/login');
         }
 

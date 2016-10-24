@@ -27,13 +27,20 @@ class Auth
 
     public function checkCredentials($username, $password)
     {
+
         $user = $this->userRepository->findByUser($username);
+
 
         if ($user === false) {
             return false;
         }
 
-        return $this->hash->check($password, $user->getHash());
+        if($this->hash->check($password, $user->getHash(), $user->getSalt())){
+            $this->debug_to_console("match");
+        }
+
+        return $this->hash->check($password, $user->getHash(), $user->getSalt());
+
     }
 
     /**
@@ -88,5 +95,6 @@ class Auth
             session_destroy();
         }
     }
+
 
 }
