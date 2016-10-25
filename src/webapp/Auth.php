@@ -80,7 +80,7 @@ class Auth
     public function isAdmin()
     {
         if ($this->check()) {
-            return $_COOKIE['isadmin'] === 'yes';
+            return $this->userRepository->findByUser($_SESSION['user'])->isAdmin();
         }
 
         throw new Exception('Not logged in but called Auth::isAdmin() anyway');
@@ -88,9 +88,7 @@ class Auth
 
     public function logout()
     {
-        if($this->guest()) {
-            session_destroy();
-        }
+        session_destroy();
     }
 
 
