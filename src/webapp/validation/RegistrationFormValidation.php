@@ -7,12 +7,13 @@ use tdt4237\webapp\models\User;
 class RegistrationFormValidation
 {
     const MIN_USER_LENGTH = 3;
+    const MAX_INPUT_FIELD_LENGTH = 40;
     
     private $validationErrors = [];
     
     public function __construct($username, $password, $first_name, $last_name, $phone, $company)
     {
-        return $this->validate($username, $password, $first_name, $last_name, $phone, $company);
+        $this->validate($username, $password, $first_name, $last_name, $phone, $company);
     }
     
     public function isGoodToGo()
@@ -27,6 +28,30 @@ class RegistrationFormValidation
 
     private function validate($username, $password, $first_name, $last_name, $phone, $company)
     {
+        if (strlen($password) > RegistrationFormValidation::MAX_INPUT_FIELD_LENGTH){
+            $this->validationErrors[] = 'Too long password';
+        }
+
+        if (strlen($username) > RegistrationFormValidation::MAX_INPUT_FIELD_LENGTH){
+            $this->validationErrors[] = 'Too long username';
+        }
+
+        if (strlen($first_name) > RegistrationFormValidation::MAX_INPUT_FIELD_LENGTH){
+            $this->validationErrors[] = 'Too long first name';
+        }
+
+        if (strlen($last_name) > RegistrationFormValidation::MAX_INPUT_FIELD_LENGTH){
+            $this->validationErrors[] = 'Too long last name';
+        }
+
+        if (strlen($phone) > 8){
+            $this->validationErrors[] = 'Too long phone no.';
+        }
+
+        if (strlen($company) > RegistrationFormValidation::MAX_INPUT_FIELD_LENGTH){
+            $this->validationErrors[] = 'Too long company name';
+        }
+
         if (empty($password)) {
             $this->validationErrors[] = 'Password cannot be empty';
         }
