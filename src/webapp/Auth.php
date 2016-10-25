@@ -45,6 +45,13 @@ class Auth
      */
     public function check()
     {
+        if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 60)) {
+            // 60s = 1 minute
+            session_unset();     // unset $_SESSION variable for the run-time
+            session_destroy();   // destroy session data in storage
+        }
+        $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
+
         return isset($_SESSION['user']);
     }
 
