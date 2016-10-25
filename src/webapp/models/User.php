@@ -41,7 +41,6 @@ class User
     public function setSalt($salt)
     {
         $this->salt = $salt;
-        print $salt;
     }
 
 

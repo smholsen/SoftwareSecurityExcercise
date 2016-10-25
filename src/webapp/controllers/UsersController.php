@@ -73,8 +73,7 @@ class UsersController extends Controller
             $salt = $hasher->getSalt();
             $user = new User($username, $password, $firstName, $lastName, $phone, $company, $salt);
             $this->userRepository->save($user);
-
-            $this->app->flash('info', $salt);
+            
             return $this->app->redirect('/login');
         }
 

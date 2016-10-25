@@ -34,10 +34,7 @@ class Auth
         if ($user === false) {
             return false;
         }
-
-        if($this->hash->check($password, $user->getHash(), $user->getSalt())){
-            $this->debug_to_console("match");
-        }
+        
 
         return $this->hash->check($password, $user->getHash(), $user->getSalt());
 
