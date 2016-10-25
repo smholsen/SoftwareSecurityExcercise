@@ -32,15 +32,18 @@ class Sql
     static function insertDummyUsers()
     {
         $hashObj1 = new Hash();
+        $salt1 = $hashObj1->getSalt();
         $hashObj2 = new Hash();
+        $salt2 = $hashObj2->getSalt();
         $hashObj3 = new Hash();
+        $salt3 = $hashObj3->getSalt();
         $hash1 = $hashObj1->make(bin2hex(openssl_random_pseudo_bytes(2)));
         $hash2 = $hashObj2->make('techit');
         $hash3 = $hashObj3->make('mundbjar');
 
-        $q1 = "INSERT INTO users(user, pass, isadmin, first_name, last_name, phone, company, email) VALUES ('systemmanager', '$hash1', 1, 'Approv', 'Patents', '53290672', 'Patentsy AS', 'systemmanager@patentsy.com')";
-        $q2 = "INSERT INTO users(user, pass, isadmin, first_name, last_name, phone, company, email) VALUES ('ittechnican', '$hash2', 1, 'Robert', 'Green', '92300847', 'Patentsy AS', 'ittechnican@patentsy.com')";
-        $q3 = "INSERT INTO users(user, pass, isadmin, first_name, last_name, phone, company, email) VALUES ('ceobjarnitorgmund', '$hash3', 1, 'Bjarni', 'Torgmund', '32187625', 'Patentsy AS', 'ceobjarnitorgmund@patentsy.com')";
+        $q1 = "INSERT INTO users(user, pass, isadmin, first_name, last_name, phone, company, email, salt) VALUES ('systemmanager', '$hash1', 1, 'Approv', 'Patents', '53290672', 'Patentsy AS', 'systemmanager@patentsy.com', '$salt1')";
+        $q2 = "INSERT INTO users(user, pass, isadmin, first_name, last_name, phone, company, email, salt) VALUES ('ittechnican', '$hash2', 1, 'Robert', 'Green', '92300847', 'Patentsy AS', 'ittechnican@patentsy.com', '$salt2')";
+        $q3 = "INSERT INTO users(user, pass, isadmin, first_name, last_name, phone, company, email, salt) VALUES ('ceobjarnitorgmund', '$hash3', 1, 'Bjarni', 'Torgmund', '32187625', 'Patentsy AS', 'ceobjarnitorgmund@patentsy.com', '$salt3')";
 
         self::$pdo->exec($q1);
         self::$pdo->exec($q2);
