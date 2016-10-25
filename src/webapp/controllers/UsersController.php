@@ -79,7 +79,7 @@ class UsersController extends Controller
 
         $errors = join("<br>\n", $validation->getValidationErrors());
         $this->app->flashNow('error', $errors);
-        $this->render('users/new.twig', ['username' => $username]);
+        $this->render('users/new.twig', ['username' => $username, 'firstname' => $firstName, 'lastname' => $lastName, 'phonenumber' => $phone, 'companyname' => $company]);
     }
 
     public function edit()
