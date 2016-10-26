@@ -9,8 +9,8 @@ class PatentValidation {
     private $validationErrors = [];
     const MAX_INPUT_FIELD_LENGTH = 40;
 
-    public function __construct($company, $title) {
-        return $this->validate($company, $title);
+    public function __construct($company, $title, $description) {
+        return $this->validate($company, $title, $description);
     }
 
     public function isGoodToGo()
