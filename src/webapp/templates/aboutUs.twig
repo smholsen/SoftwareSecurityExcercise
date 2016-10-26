@@ -15,30 +15,16 @@
 
     <p>If you wish to contact us about anything, feel free to send us an email:</p>
 
-    {% if users %}
     <div class="ui link cards">
-        {% for user in users %}
-            {% if user.userid < 4 %}
-            <div class="card">
-                <div class="content">
-                    <div class="header">
-                        {% if user.userid == 1 %}
-                            Systemmanager
-                        {% elseif user.userid == 2 %}
-                            IT-technican
-                        {% elseif user.userid == 3 %}
-                            CEO
-                        {% endif %}
-                    </div>
-                    <div class="description">
-                        <a href="/user/{{ user.email|raw }}">{{ user.email|raw }}</a>
-                    </div>
+        <div class="card">
+            <div class="content">
+                <div class="header">
+                    Contact mail
+                </div>
+                <div class="description">
+                    <a href="mailto:contact@patentsy.com">contact@patentsy.com</a>
                 </div>
             </div>
-            {% endif %}
-        {% endfor %}
+        </div>
     </div>
-    {% else %}
-    <p>No users are in the database.</p>
-    {% endif %}
 {% endblock %}
