@@ -35,8 +35,18 @@ class Auth
             return false;
         }
         
+        if ($this->hash->check($password, $user->getHash(), $user->getSalt())){
+            $_SESSION['failedLogin'] = 0;
+            return true;
+        } else {
+            if (!isset($_SESSION['failedLogin'])){
+                $_SESSION['failedLogin'] = 1;
+            } else {
+                $_SESSION['failedLogin'] += 1;
+            }
+            sleep(pow($_SESSION['failedLogin'], 2)); # Do not allow logins during duration.
+        }
 
-        return $this->hash->check($password, $user->getHash(), $user->getSalt());
 
     }
 
