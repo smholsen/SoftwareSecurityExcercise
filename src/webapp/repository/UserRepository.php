@@ -13,6 +13,7 @@ class UserRepository
     const DELETE_BY_NAME = "DELETE FROM users WHERE user='%s'";
     const SELECT_ALL     = "SELECT * FROM users";
     const FIND_FULL_NAME   = "SELECT * FROM users WHERE user='%s'";
+    const UPDATE_PW_QUERY = "UPDATE users SET pass='%s',salt='%s'";
     /**
      * @var PDO
      */
@@ -95,4 +96,10 @@ class UserRepository
         );
         return $this->pdo->exec($query);
     }
+    public function updatePassword(User $user)
+    {
+        $query = sprintf(self::UPDATE_PW_QUERY, $user->getHash(), $user->getSalt(), $user->getUserId());
+        return $this->pdo->exec($query);
+    }
+
 }

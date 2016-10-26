@@ -120,13 +120,13 @@ class UsersController extends Controller
             $user->setHash($password);
             $user->setSalt($salt);
 
-            $this->userRepository->save($user);
+            $this->userRepository->updatePassword($user);
 
             $this->app->flashNow('info', 'Password updated.');
-            $this->render('users/edit.twig', ['user' => $user]);
+            //return $this->render('users/edit.twig', ['user' => $user]);
         }
         $this->app->flashNow('error', join('<br>', $validation->getValidationErrors()));
-        $this->render('users/newpw.twig', ['oldpw' => "HEI"]);
+        $this->render('users/newpw.twig', []);
         
     }
 
@@ -153,7 +153,7 @@ class UsersController extends Controller
             $this->userRepository->save($user);
 
             $this->app->flashNow('info', 'Your profile was successfully saved.');
-            return $this->render('users/edit.twig', ['user' => $user]);
+            //return $this->render('users/edit.twig', ['user' => $user]);
         }
 
         $this->app->flashNow('error', join('<br>', $validation->getValidationErrors()));
