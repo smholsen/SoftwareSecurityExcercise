@@ -5,6 +5,7 @@ namespace tdt4237\webapp\validation;
 class EditUserFormValidation
 {
     private $validationErrors = [];
+    const MAX_INPUT_FIELD_LENGTH = 40;
     
     public function __construct($email, $phone, $company)
     {
@@ -23,6 +24,18 @@ class EditUserFormValidation
 
     private function validate($email, $phone, $company)
     {
+        if (strlen($email) > EditUserFormValidation::MAX_INPUT_FIELD_LENGTH){
+            $this->validationErrors[] = 'Too long email';
+        }
+
+        if (strlen($phone) > 8){
+            $this->validationErrors[] = 'Too long phone no';
+        }
+
+        if (strlen($company) > EditUserFormValidation::MAX_INPUT_FIELD_LENGTH){
+            $this->validationErrors[] = 'Too long company name';
+        }
+
         $this->validateEmail($email);
         $this->validatePhone($phone);
         $this->validateCompany($company);
