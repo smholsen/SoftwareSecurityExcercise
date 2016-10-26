@@ -12,9 +12,16 @@ class RegistrationFormValidation
     
     public function __construct($username, $password, $first_name, $last_name, $phone, $company)
     {
-        return $this->validate($username, $password, $first_name, $last_name, $phone, $company);
+        if ($this->auth->guest()) {
+            $this->app->flash("info", "You must be logged in to do that");
+            $this->app->redirect("/login");
+
+        } else {
+            $user = $this->userRepository->findByUser($username);
+        }
+        return $this->validate($user->username, $user->password, $user->first_name, $user->last_name, $user->phone, $user->company);
     }
-    
+
     public function isGoodToGo()
     {
         return empty($this->validationErrors);
@@ -53,11 +60,11 @@ class RegistrationFormValidation
         }
 
         if(empty($phone)) {
-            $this->validationErrors[] = "Please write in your post code";
+            $this->validationErrors[] = "Please write in your phone number";
         }
 
-        if (strlen($phone) != "8") {
-            $this->validationErrors[] = "Phone number must be exactly eight digits";
+        if (! is_numeric($phone) or $phone < 00000000 or $phone > 99999999) {
+            $this->validationErrors[] = 'Phone must be between 00000000 and 99999999.';
         }
 
         if(strlen($company) > 0 && (!preg_match('/[^0-9]/',$company)))

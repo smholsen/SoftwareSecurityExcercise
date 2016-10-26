@@ -8,6 +8,7 @@ use tdt4237\webapp\models\Email;
 use tdt4237\webapp\models\User;
 use tdt4237\webapp\validation\EditUserFormValidation;
 use tdt4237\webapp\validation\RegistrationFormValidation;
+use tdt4237\webapp\validation\ChangePasswordValidation;
 
 class UsersController extends Controller
 {
@@ -89,6 +90,23 @@ class UsersController extends Controller
         $this->render('users/edit.twig', [
             'user' => $this->auth->user()
         ]);
+    }
+
+    public function editpw()
+    {
+        $this->makeSureUserIsAuthenticated();
+
+        $this->render('users/newpw.twig', [
+            //'user' => $this->auth->user()
+        ]);
+    }
+
+    public function updatepw()
+    {
+        $this->makeSureUserIsAuthenticated();
+        $user = $this->auth->user();
+        $this->app->flashNow('info', 'Works like a charm :)');
+
     }
 
     public function update()

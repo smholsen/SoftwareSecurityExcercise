@@ -68,6 +68,10 @@ $app->get('/users/:username/delete', $ns . 'UsersController:destroy');
 $app->get('/profile/edit', $ns . 'UsersController:edit')->name('editprofile');
 $app->post('/profile/edit', $ns . 'UsersController:update');
 
+// Change own password
+$app->post('/profile/edit/pwedit', $ns . 'UsersController:editpw')->name('editpassword');
+$app->post('/profile/edit/pwchange', $ns . 'UsersController:updatepw');
+
 // Patents
 $app->get('/patents', $ns . 'PatentsController:index')->name('showpatents');
 
