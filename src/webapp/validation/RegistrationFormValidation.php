@@ -56,6 +56,19 @@ class RegistrationFormValidation
             $this->validationErrors[] = 'Password cannot be empty';
         }
 
+        if (preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}/', $password ) === 0) {
+            $this->validationErrors[] = 'Password must contain minimum 8 characters at least 1 Uppercase letter, 1 
+            Lowercase letter, 1 Number and 1 Special Character.';
+        }
+
+        if(!empty($password) and !empty($username) and !empty($first_name) and  !empty($last_name) and !empty($company)) {
+            if (strpos($password, $username) !== false or strpos($password, $first_name) !== false or
+                strpos($password, $last_name) !== false
+            ) {
+                $this->validationErrors[] = 'Password cannot contain parts of username or personal information!';
+            }
+        }
+
         if(empty($first_name)) {
             $this->validationErrors[] = "Please write in your first name";
         }

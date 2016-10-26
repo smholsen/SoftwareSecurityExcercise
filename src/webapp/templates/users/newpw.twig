@@ -1,0 +1,32 @@
+{% extends 'layouts/base.twig' %}
+
+{% block content %}
+    <h2>Change password</h2>
+    {% if flash.error %}
+        <div class="ui error message">
+            {{ flash.error|raw }}
+        </div>
+    {% endif %}
+
+    <form action="" method="post" class="ui form">
+        
+
+        <div class="field">
+            <label>Old Password</label>
+            <input type = "password" name="oldpw">
+        </div>
+
+        <div class="field">
+            <label>New Password</label>
+            <input type = "password" name="newpw1">
+        </div>
+
+        <div class="field">
+            <label>Confirm New Password</label>
+            <input type = "password" name="newpw2">
+        </div>
+
+        <input type="submit" name="submit" value="Change Password" class="positive ui button">
+
+    </form>
+{% endblock %}

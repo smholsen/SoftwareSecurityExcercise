@@ -8,6 +8,7 @@ use tdt4237\webapp\models\Email;
 use tdt4237\webapp\models\User;
 use tdt4237\webapp\validation\EditUserFormValidation;
 use tdt4237\webapp\validation\RegistrationFormValidation;
+use tdt4237\webapp\validation\ChangePasswordValidation;
 
 class UsersController extends Controller
 {
@@ -79,7 +80,7 @@ class UsersController extends Controller
 
         $errors = join("<br>\n", $validation->getValidationErrors());
         $this->app->flashNow('error', $errors);
-        $this->render('users/new.twig', ['username' => $username]);
+        $this->render('users/new.twig', ['username' => $username, 'firstname' => $firstName, 'lastname' => $lastName, 'phonenumber' => $phone, 'companyname' => $company]);
     }
 
     public function edit()
@@ -89,6 +90,44 @@ class UsersController extends Controller
         $this->render('users/edit.twig', [
             'user' => $this->auth->user()
         ]);
+    }
+
+    public function editpw()
+    {
+        $this->makeSureUserIsAuthenticated();
+        //$this->app->redirect('/profile/edit/pwchange');
+        $this->render('users/newpw.twig', []);
+    }
+
+    public function updatepw()
+    {
+
+        $this->makeSureUserIsAuthenticated();
+        $user = $this->auth->user();
+
+        $request    = $this->app->request;
+        $oldpw      = $request->post('oldpw');
+        $newpw1     = $request->post('newpw1');
+        $newpw2     = $request->post('newpw2');
+        
+        $validation = new ChangePasswordValidation($user,$oldpw,$newpw1,$newpw2);
+
+        if ($validation->isGoodToGo()) {
+            $password = $newpw1;
+            $hasher = new Hash();
+            $password = $hasher->make($password);
+            $salt = $hasher->getSalt();
+            $user->setHash($password);
+            $user->setSalt($salt);
+
+            $this->userRepository->updatePassword($user);
+
+            $this->app->flashNow('info', 'Password updated.');
+            //return $this->render('users/edit.twig', ['user' => $user]);
+        }
+        $this->app->flashNow('error', join('<br>', $validation->getValidationErrors()));
+        $this->render('users/newpw.twig', []);
+        
     }
 
     public function update()
@@ -114,7 +153,7 @@ class UsersController extends Controller
             $this->userRepository->save($user);
 
             $this->app->flashNow('info', 'Your profile was successfully saved.');
-            return $this->render('users/edit.twig', ['user' => $user]);
+            //return $this->render('users/edit.twig', ['user' => $user]);
         }
 
         $this->app->flashNow('error', join('<br>', $validation->getValidationErrors()));
