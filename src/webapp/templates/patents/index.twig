@@ -2,7 +2,11 @@
 
 {% block content %}
     <h2>Patents</h2>
-
+    {% if flash.error %}
+        <div class="ui error message">
+            {{ flash.error|raw }}
+        </div>
+    {% endif %}
     <table class="ui single line table">
         <thead>
             <tr>
