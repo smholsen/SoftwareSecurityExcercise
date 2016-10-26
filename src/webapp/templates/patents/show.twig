@@ -7,9 +7,9 @@
             <div class="sub header">Administer this patent</div>
         </h2>
 
-        {% if flash.msg %}
+        {% if flash.msg == "new" %}
             <div class="ui warning message">
-                {{ flash.msg|raw }}
+                Patent successfully registered.
             </div>
         {% endif %}
 
