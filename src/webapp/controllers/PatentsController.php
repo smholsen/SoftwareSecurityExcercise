@@ -75,7 +75,7 @@ class PatentsController extends Controller
             $date        = date("dmY");
             $file = $this -> startUpload();
 
-            $validation = new PatentValidation($title, $description, $description);
+            $validation = new PatentValidation($title, $description, $description, $file);
             if ($validation->isGoodToGo()) {
                 $patent = new Patent($company, $title, $description, $date, $file);
                 $patent->setCompany($company);
@@ -87,17 +87,18 @@ class PatentsController extends Controller
                 $this->app->redirect('/patents/' . $savedPatent . '?msg="Patent succesfully registered');
             }
         }
-
-            $this->app->flashNow('error', join('<br>', $validation->getValidationErrors()));
-            $this->app->render('patents/new.twig');
+        $this->app->flash('info', join('<br>', $validation->getValidationErrors()));
+        $this->app->redirect('/patents/new');
     }
 
     public function startUpload()
     {
         if(isset($_POST['submit']))
         {
+
             $target_dir =  getcwd()."/web/uploads/";
             $targetFile = $target_dir . basename($_FILES['uploaded']['name']);
+
             if(move_uploaded_file($_FILES['uploaded']['tmp_name'], $targetFile))
             {
                 return $targetFile;
