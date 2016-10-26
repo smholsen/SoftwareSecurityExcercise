@@ -6,7 +6,13 @@
     <a href="{{ urlFor('showpatents') }}" class="item">Patents</a>
     <div class="right menu">
         {% if isLoggedIn %}
-            <a href="#" class="item">Logged in as {{ loggedInUsername }}</a>
+            <form role="search" id="patent-search-form" method="post" action="{{ urlFor('_search') }}">
+                <div class="field">
+                    <input type="text" name="searchquery">
+                    <input type="submit" name="submit" value="Search" class="positive ui button">
+                </div>
+            </form>
+            <a href="{{ urlFor('editprofile') }}" class="item">Logged in as {{ loggedInUsername }}</a>
             <a href="{{ urlFor('logout') }}" class="item">Log out</a>
         {% else %}
             <a href="{{ urlFor('newuser') }}" class="item">Create account</a>

@@ -56,6 +56,9 @@ $app->post('/login', $ns . 'SessionsController:create');
 
 $app->get('/logout', $ns . 'SessionsController:destroy')->name('logout');
 
+// Search
+$app->post('/search', $ns . 'SearchController:search')->name('_search');
+
 // User management
 $app->get('/users/new', $ns . 'UsersController:newuser')->name('newuser');
 $app->post('/users/new', $ns . 'UsersController:create');
