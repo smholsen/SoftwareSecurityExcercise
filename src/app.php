@@ -15,7 +15,7 @@ chmod(__DIR__ . '/../web/uploads', 0777);
 
 $app = new Slim([
     'templates.path' => __DIR__.'/webapp/templates/',
-    'debug' => false,
+    'debug' => true,
     'view' => new Twig()
 
 ]);
@@ -69,7 +69,7 @@ $app->get('/profile/edit', $ns . 'UsersController:edit')->name('editprofile');
 $app->post('/profile/edit', $ns . 'UsersController:update');
 
 // Change own password
-$app->post('/profile/edit/pwedit', $ns . 'UsersController:editpw')->name('editpassword');
+$app->post('/profile/edit/pwedit', $ns . 'UsersController:editpw');
 $app->post('/profile/edit/pwchange', $ns . 'UsersController:updatepw');
 
 // Patents

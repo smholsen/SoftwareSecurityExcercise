@@ -95,18 +95,39 @@ class UsersController extends Controller
     public function editpw()
     {
         $this->makeSureUserIsAuthenticated();
-
-        $this->render('users/newpw.twig', [
-            //'user' => $this->auth->user()
-        ]);
+        //$this->app->redirect('/profile/edit/pwchange');
+        $this->render('users/newpw.twig', []);
     }
 
     public function updatepw()
     {
+
         $this->makeSureUserIsAuthenticated();
         $user = $this->auth->user();
-        $this->app->flashNow('info', 'Works like a charm :)');
 
+        $request    = $this->app->request;
+        $oldpw      = $request->post('oldpw');
+        $newpw1     = $request->post('newpw1');
+        $newpw2     = $request->post('newpw2');
+        
+        $validation = new ChangePasswordValidation($user,$oldpw,$newpw1,$newpw2);
+
+        if ($validation->isGoodToGo()) {
+            $password = $newpw1;
+            $hasher = new Hash();
+            $password = $hasher->make($password);
+            $salt = $hasher->getSalt();
+            $user->setHash($password);
+            $user->setSalt($salt);
+
+            $this->userRepository->save($user);
+
+            $this->app->flashNow('info', 'Password updated.');
+            $this->render('users/edit.twig', ['user' => $user]);
+        }
+        $this->app->flashNow('error', join('<br>', $validation->getValidationErrors()));
+        $this->render('users/newpw.twig', []);
+        
     }
 
     public function update()

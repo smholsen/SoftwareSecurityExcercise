@@ -3,24 +3,24 @@
 {% block content %}
     <h2>Change password</h2>
 
-    <form action="" method="post" class="ui form">
+    <form action="/profile/edit/pwchange" method="post" class="ui form">
         <div class="ui error message">
             {{ flash.error }}
         </div>
 
         <div class="field">
             <label>Old Password</label>
-            <input type = "password" name="old_pw">
+            <input type = "password" name="oldpw">
         </div>
 
         <div class="field">
             <label>New Password</label>
-            <input type = "password" name="new_pw1">
+            <input type = "password" name="newpw1">
         </div>
 
         <div class="field">
             <label>Confirm New Password</label>
-            <input type = "password" name="new_pw2">
+            <input type = "password" name="newpw2">
         </div>
 
         <input type="submit" name="submit" value="Change Password" class="positive ui button">
