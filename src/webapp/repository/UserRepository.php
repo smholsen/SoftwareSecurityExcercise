@@ -13,7 +13,7 @@ class UserRepository
     const DELETE_BY_NAME = "DELETE FROM users WHERE user='%s'";
     const SELECT_ALL     = "SELECT * FROM users";
     const FIND_FULL_NAME   = "SELECT * FROM users WHERE user='%s'";
-    const UPDATE_PW_QUERY = "UPDATE users SET pass='%s',salt='%s'";
+    const UPDATE_PW_QUERY = "UPDATE users SET pass='%s',salt='%s' WHERE id='%s'";
     /**
      * @var PDO
      */
