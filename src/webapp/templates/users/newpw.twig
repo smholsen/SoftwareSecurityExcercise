@@ -2,11 +2,19 @@
 
 {% block content %}
     <h2>Change password</h2>
-
-    <form action="/profile/edit/pwchange" method="post" class="ui form">
+    {% if flash.error %}
         <div class="ui error message">
-            {{ flash.error }}
+            {{ flash.error|raw }}
         </div>
+    {% endif %}
+
+    {% if flash.info %}
+        <div class="ui warning message">
+            {{ flash.info|raw }}
+        </div>
+    {% endif %}
+    <form action="" method="post" class="ui form">
+        
 
         <div class="field">
             <label>Old Password</label>

@@ -126,7 +126,7 @@ class UsersController extends Controller
             $this->render('users/edit.twig', ['user' => $user]);
         }
         $this->app->flashNow('error', join('<br>', $validation->getValidationErrors()));
-        $this->render('users/newpw.twig', []);
+        $this->render('users/newpw.twig', ['oldpw' => "HEI"]);
         
     }
 
