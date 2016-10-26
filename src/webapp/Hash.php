@@ -2,6 +2,7 @@
 
 namespace tdt4237\webapp;
 
+use Prophecy\Util\StringUtil;
 use Symfony\Component\Config\Definition\Exception\Exception;
 
 class Hash
@@ -12,7 +13,7 @@ class Hash
 
     public function __construct()
     {
-        $this->salt = random_bytes(32);
+        $this->salt = hash('sha256', random_bytes(32));
     }
 
     public function getSalt()
