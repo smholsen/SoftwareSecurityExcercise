@@ -27,9 +27,37 @@
             </div>
 
             <div class="eight wide column">
-                {% if flash.info %}
+            {% if flash.info %}
+                <div class="ui warning message">
+                {% for inf in flash.info %}
+                    {{ inf|e }}
+                    <br>
+                {% endfor %}
+                </div>
+            {% endif %}
+            {% if flash.success %}
+                    <div class="ui success message">
+                    {% for suc in flash.success %}
+                        {{ suc|e }}
+                        <br>
+                    {% endfor %}
+                    {{ flash.success|e }}
+                    </div>
+            {% endif %}
+            {% if flash.error %}
+                <div class="ui error message">
+                {% for err in flash.error %}
+                    {{ err|e }}
+                    <br>
+                {% endfor %}
+                </div>
+            {% endif %}
+                {% if flash.msg %}
                     <div class="ui warning message">
-                        {{ flash.info|raw }}
+                        {% for msg in flash.msg %}
+                            {{ msg|e }}
+                            <br>
+                        {% endfor %}
                     </div>
                 {% endif %}
 

@@ -29,6 +29,7 @@ class SearchController extends Controller
                     $patent->sortByDate();
                     foreach ($patent as $haystack) 
                     {
+                        
                         if ((preg_match("/\b".$needle."\b/i", $haystack->getTitle())) or (preg_match("/\b".$needle."\b/i", $haystack->getCompany())))
                         {
                             $result[] = $haystack;

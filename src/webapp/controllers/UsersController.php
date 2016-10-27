@@ -74,11 +74,11 @@ class UsersController extends Controller
             $salt = $hasher->getSalt();
             $user = new User($username, $password, $firstName, $lastName, $phone, $company, $salt);
             $this->userRepository->save($user);
-            
+            $this->app->flash('success', "Profile successfully created. Log in to continue.");
             return $this->app->redirect('/login');
         }
 
-        $errors = join("<br>\n", $validation->getValidationErrors());
+        $errors = $validation->getValidationErrors();
         $this->app->flashNow('error', $errors);
         $this->render('users/new.twig', ['username' => $username, 'firstname' => $firstName, 'lastname' => $lastName, 'phonenumber' => $phone, 'companyname' => $company]);
     }
@@ -152,7 +152,7 @@ class UsersController extends Controller
             $user->setLastName($lastName);
             $this->userRepository->save($user);
 
-            $this->app->flashNow('info', 'Your profile was successfully saved.');
+            $this->app->flashNow('success', 'Your profile was successfully saved.');
             //return $this->render('users/edit.twig', ['user' => $user]);
         }
 

@@ -3,50 +3,37 @@
 {% block content %}
     <h2>User</h2>
 
-    {% if flash.error %}
-        <div class="ui error message">
-            {{ flash.error }}
-        </div>
-    {% endif %}
-
-    {% if flash.info %}
-        <div class="ui warning message">
-            {{ flash.info|raw }}
-        </div>
-    {% endif %}
-
     {% if user %}
         <table class="ui definition table">
             <tr>
                 <td>Id</td>
-                <td>{{ user.userid|raw }}</td>
+                <td>{{ user.userid|e }}</td>
             </tr>
 
             <tr>
                 <td>Username</td>
-                <td>{{ user.username|raw }}</td>
+                <td>{{ user.username|e }}</td>
             </tr>
 
             <tr>
                 <td>First Name</td>
-                <td>{{ user.firstName }}</td>
+                <td>{{ user.firstName|e }}</td>
             </tr>
 
             <tr>
                 <td>Last Name</td>
-                <td>{{ user.lastName }}</td>
+                <td>{{ user.lastName|e }}</td>
             </tr>
 
             <tr>
                 <td>Company</td>
-                <td>{{ user.company|raw }}</td>
+                <td>{{ user.company|e }}</td>
             </tr>
         </table>
 
-        <!-- PS: RMB4P!!! {{ user.hash|raw }} -->
     {% else %}
         <div class="ui error message">
-            Could not find a user with username "{{ username|raw }}".
+            Could not find a user with username "{{ username|e }}".
         </div>
     {% endif %}
 {% endblock %}
