@@ -13,7 +13,8 @@ class Hash
 
     public function __construct()
     {
-        $this->salt = hash('sha256', random_bytes(32));
+        $randomStr = $this->generateRandomString(10);
+        $this->salt = hash('sha256',$randomStr);
     }
 
     public function getSalt()
@@ -30,6 +31,16 @@ class Hash
     public function check($plaintext, $hash, $saltFromDB)
     {
         return hash('sha256', $plaintext . $saltFromDB) === $hash;
+    }
+
+   private function generateRandomString($length) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!"#$%&/()=?';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+   return $randomString;
     }
     
 }

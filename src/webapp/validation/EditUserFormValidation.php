@@ -51,7 +51,7 @@ class EditUserFormValidation
     private function validatePhone($phone)
     {
         if (! is_numeric($phone) or $phone < 00000000 or $phone > 99999999) {
-            $this->validationErrors[] = 'Phoe must be between 00000000 and 99999999.';
+            $this->validationErrors[] = 'Phone number must be between 00000000 and 99999999.';
         }
     }
 
