@@ -15,6 +15,11 @@ class Auth
     private $hash;
 
     /**
+     * @var
+     */
+    private $ip;
+
+    /**
      * @var UserRepository
      */
     private $userRepository;
@@ -23,6 +28,30 @@ class Auth
     {
         $this->userRepository = $userRepository;
         $this->hash           = $hash;
+        $this->ip             = $this->getIp();
+    }
+
+
+    public function getIp()
+    {
+        $client  = @$_SERVER['HTTP_CLIENT_IP'];
+        $forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
+        $remote  = $_SERVER['REMOTE_ADDR'];
+
+        if(filter_var($client, FILTER_VALIDATE_IP))
+        {
+            $ip = $client;
+        }
+        elseif(filter_var($forward, FILTER_VALIDATE_IP))
+        {
+            $ip = $forward;
+        }
+        else
+        {
+            $ip = $remote;
+        }
+
+        return $ip;
     }
 
     public function checkCredentials($username, $password)
@@ -45,7 +74,10 @@ class Auth
      */
     public function check()
     {
-        return isset($_SESSION['user']);
+        $currIp = $this->getIp();
+
+        $this->debug_to_console($this->ip . $currIp);
+        return (isset($_SESSION['user']) && $this->ip == $currIp);
     }
 
     public function getUsername() {
@@ -89,6 +121,16 @@ class Auth
     public function logout()
     {
         session_destroy();
+    }
+
+    function debug_to_console( $data ) {
+
+        if ( is_array( $data ) )
+            $output = "<script>console.log( 'Debug Objects: " . implode( ',', $data) . "' );</script>";
+        else
+            $output = "<script>console.log( 'Debug Objects: " . $data . "' );</script>";
+
+        echo $output;
     }
 
 
