@@ -4,6 +4,7 @@ namespace tdt4237\webapp;
 
 use Exception;
 use tdt4237\webapp\Hash;
+use tdt4237\webapp\repository\IpRepository;
 use tdt4237\webapp\repository\UserRepository;
 
 class Auth
@@ -17,17 +18,18 @@ class Auth
     /**
      * @var
      */
-    private $ip;
 
-    /**
-     * @var UserRepository
-     */
     private $userRepository;
 
-    public function __construct(UserRepository $userRepository, Hash $hash)
+    private  $ipRepository;
+
+    public function __construct(UserRepository $userRepository, Hash $hash, IpRepository $ipRepository)
     {
         $this->userRepository = $userRepository;
         $this->hash           = $hash;
+        $this-> ipRepository = $ipRepository;
+
+
         $_SESSION['ip']       = $this->getIp();
     }
 
@@ -64,6 +66,22 @@ class Auth
             return false;
         }
         
+<<<<<<< Updated upstream
+=======
+        if ($this->hash->check($password, $user->getHash(), $user->getSalt())){
+            $_SESSION['failedLogin'] = 0;
+            $this->ipRepository->saveNewIp(session_id(), $_SESSION['ip']);
+            $this->debug_to_console('row stored in db. retrieved: this ip from current sessionid:' . $this->ipRepository->getIpBySessid(session_id()));
+            return true;
+        } else {
+            if (!isset($_SESSION['failedLogin'])){
+                $_SESSION['failedLogin'] = 1;
+            } else {
+                $_SESSION['failedLogin'] += 1;
+            }
+            sleep(pow($_SESSION['failedLogin'], 2)); # Do not allow logins during duration.
+        }
+>>>>>>> Stashed changes
 
         return $this->hash->check($password, $user->getHash(), $user->getSalt());
 
@@ -79,8 +97,20 @@ class Auth
 
     public function ipCheck(){
         $currIp = $this->getIp();
-        return $this->ip == $currIp;
+        $this->debug_to_console($this->ipRepository->getIpBySessid(session_id()) . "  || " . $currIp);
+        return $this->ipRepository->getIpBySessid(session_id()) == $currIp;
     }
+
+    function debug_to_console( $data ) {
+
+        if ( is_array( $data ) )
+            $output = "<script>console.log( 'Debug Objects: " . implode( ',', $data) . "' );</script>";
+        else
+            $output = "<script>console.log( 'Debug Objects: " . $data . "' );</script>";
+
+        echo $output;
+    }
+
     public function getUsername() {
         if(isset($_SESSION['user'])){
         return $_SESSION['user'];
@@ -124,6 +154,10 @@ class Auth
         session_destroy();
     }
 
+    public function destroyWithMessage(){
+        // Looks like you are allready logged in.
+        session_destroy();
+    }
 
 
 }

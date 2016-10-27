@@ -7,6 +7,7 @@ use tdt4237\webapp\Auth;
 use tdt4237\webapp\Hash;
 use tdt4237\webapp\repository\UserRepository;
 use tdt4237\webapp\repository\PatentRepository;
+use tdt4237\webapp\repository\IpRepository;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -15,7 +16,7 @@ chmod(__DIR__ . '/../web/uploads', 0777);
 
 $app = new Slim([
     'templates.path' => __DIR__.'/webapp/templates/',
-    'debug' => false,
+    'debug' => true,
     'view' => new Twig()
 
 ]);
@@ -42,7 +43,8 @@ date_default_timezone_set("Europe/Oslo");
 $app->hash = new Hash();
 $app->userRepository = new UserRepository($app->db);
 $app->patentRepository = new PatentRepository($app->db);
-$app->auth = new Auth($app->userRepository, $app->hash);
+$app->IpRepository = new IpRepository($app->db);
+$app->auth = new Auth($app->userRepository, $app->hash, $app->IpRepository);
 
 $ns ='tdt4237\\webapp\\controllers\\';
 
