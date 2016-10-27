@@ -1,6 +1,7 @@
 <?php
 
 namespace tdt4237\webapp;
+const SESSION_TIMEOUT = 900;
 
 use Exception;
 use tdt4237\webapp\Hash;
@@ -45,7 +46,8 @@ class Auth
      */
     public function check()
     {
-        if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 300)) {
+        if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > SESSION_TIMEOUT)) {
+
             // 60s = 1 minute
             session_unset();     // unset $_SESSION variable for the run-time
             session_destroy();   // destroy session data in storage

@@ -58,7 +58,7 @@ class Patent
     }
 
     public function setTitle($title) {
-        $this->title = $title;
+        $this->title = htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
         return $this;
     }
 
