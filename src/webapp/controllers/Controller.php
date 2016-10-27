@@ -22,10 +22,13 @@ class Controller
 
     protected function render($template, $variables = [])
     {
-        if ($this->auth->check()) {
+        if ($this->auth->check() && $this->auth->ipcheck()) {
             $variables['isLoggedIn'] = true;
             $variables['isAdmin'] = $this->auth->isAdmin();
             $variables['loggedInUsername'] = $_SESSION['user'];
+        } else if ($this->auth->check()){
+            session_destroy();
+            $this->app->flash('error', 'Looks like you have changed location, please log in again');
         }
 
         print $this->app->render($template, $variables);

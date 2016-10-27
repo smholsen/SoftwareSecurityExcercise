@@ -28,7 +28,7 @@ class Auth
     {
         $this->userRepository = $userRepository;
         $this->hash           = $hash;
-        $this->ip             = $this->getIp();
+        $_SESSION['ip']       = $this->getIp();
     }
 
 
@@ -74,12 +74,13 @@ class Auth
      */
     public function check()
     {
-        $currIp = $this->getIp();
-
-        $this->debug_to_console($this->ip . $currIp);
-        return (isset($_SESSION['user']) && $this->ip == $currIp);
+        return isset($_SESSION['user']);
     }
 
+    public function ipCheck(){
+        $currIp = $this->getIp();
+        return $this->ip == $currIp;
+    }
     public function getUsername() {
         if(isset($_SESSION['user'])){
         return $_SESSION['user'];
@@ -123,15 +124,6 @@ class Auth
         session_destroy();
     }
 
-    function debug_to_console( $data ) {
-
-        if ( is_array( $data ) )
-            $output = "<script>console.log( 'Debug Objects: " . implode( ',', $data) . "' );</script>";
-        else
-            $output = "<script>console.log( 'Debug Objects: " . $data . "' );</script>";
-
-        echo $output;
-    }
 
 
 }
