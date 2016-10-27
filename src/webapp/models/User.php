@@ -14,8 +14,9 @@ class User
     protected $company = null;
     protected $email   = null;
     protected $isAdmin = 0;
+    protected $salt;
 
-    function __construct($username, $hash, $firstName, $lastName, $phone, $company)
+    function __construct($username, $hash, $firstName, $lastName, $phone, $company, $salt)
     {
         $this->username = $username;
         $this->hash = $hash;
@@ -23,6 +24,7 @@ class User
         $this->lastName = $lastName;
         $this->phone = $phone;
         $this->company = $company;
+        $this->salt = $salt;
     }
 
     public function getUserId()
@@ -30,11 +32,24 @@ class User
         return $this->userId;
     }
 
+
+    public function getSalt()
+    {
+        return $this->salt;
+    }
+
+    public function setSalt($salt)
+    {
+        $this->salt = $salt;
+    }
+
+
     public function setUserId($userId)
     {
         $this->userId = $userId;
         return $this;
     }
+
 
     public function getUsername()
     {

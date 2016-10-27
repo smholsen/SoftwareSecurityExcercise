@@ -2,27 +2,45 @@
 
 namespace tdt4237\webapp;
 
+use Prophecy\Util\StringUtil;
 use Symfony\Component\Config\Definition\Exception\Exception;
 
 class Hash
 {
 
-    static $salt = "password";
+    protected $salt;
 
 
     public function __construct()
     {
+        $randomStr = $this->generateRandomString(10);
+        $this->salt = hash('sha256',$randomStr);
     }
 
-    public static function make($plaintext)
+    public function getSalt()
     {
-        return hash('sha1', $plaintext . Hash::$salt);
-
+        return $this->salt;
     }
 
-    public function check($plaintext, $hash)
+    public function make($plaintext)
     {
-        return $this->make($plaintext) === $hash;
+        return hash('sha256', $plaintext . $this->salt);
+
     }
 
+    public function check($plaintext, $hash, $saltFromDB)
+    {
+        return hash('sha256', $plaintext . $saltFromDB) === $hash;
+    }
+
+   private function generateRandomString($length) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!"#$%&/()=?';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+   return $randomString;
+    }
+    
 }

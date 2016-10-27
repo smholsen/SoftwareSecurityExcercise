@@ -1,6 +1,7 @@
 <?php
 
 namespace tdt4237\webapp;
+const SESSION_TIMEOUT = 900;
 
 use Exception;
 use tdt4237\webapp\Hash;
@@ -27,13 +28,17 @@ class Auth
 
     public function checkCredentials($username, $password)
     {
+
         $user = $this->userRepository->findByUser($username);
+
 
         if ($user === false) {
             return false;
         }
+        
 
-        return $this->hash->check($password, $user->getHash());
+        return $this->hash->check($password, $user->getHash(), $user->getSalt());
+
     }
 
     /**
@@ -41,6 +46,13 @@ class Auth
      */
     public function check()
     {
+        if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > SESSION_TIMEOUT)) {
+            // 60s = 1 minute
+            session_unset();     // unset $_SESSION variable for the run-time
+            session_destroy();   // destroy session data in storage
+        }
+        $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
+
         return isset($_SESSION['user']);
     }
 
@@ -76,7 +88,7 @@ class Auth
     public function isAdmin()
     {
         if ($this->check()) {
-            return $_COOKIE['isadmin'] === 'yes';
+            return $this->userRepository->findByUser($_SESSION['user'])->isAdmin();
         }
 
         throw new Exception('Not logged in but called Auth::isAdmin() anyway');
@@ -84,9 +96,8 @@ class Auth
 
     public function logout()
     {
-        if($this->guest()) {
-            session_destroy();
-        }
+        session_destroy();
     }
+
 
 }

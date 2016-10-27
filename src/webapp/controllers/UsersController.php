@@ -2,11 +2,13 @@
 
 namespace tdt4237\webapp\controllers;
 
+use tdt4237\webapp\Hash;
 use tdt4237\webapp\models\Phone;
 use tdt4237\webapp\models\Email;
 use tdt4237\webapp\models\User;
 use tdt4237\webapp\validation\EditUserFormValidation;
 use tdt4237\webapp\validation\RegistrationFormValidation;
+use tdt4237\webapp\validation\ChangePasswordValidation;
 
 class UsersController extends Controller
 {
@@ -67,17 +69,18 @@ class UsersController extends Controller
 
         if ($validation->isGoodToGo()) {
             $password = $password;
-            $password = $this->hash->make($password);
-            $user = new User($username, $password, $firstName, $lastName, $phone, $company);
+            $hasher = new Hash();
+            $password = $hasher->make($password);
+            $salt = $hasher->getSalt();
+            $user = new User($username, $password, $firstName, $lastName, $phone, $company, $salt);
             $this->userRepository->save($user);
-
-            $this->app->flash('info', 'Thanks for creating a user. Now log in.');
+            
             return $this->app->redirect('/login');
         }
 
         $errors = join("<br>\n", $validation->getValidationErrors());
         $this->app->flashNow('error', $errors);
-        $this->render('users/new.twig', ['username' => $username]);
+        $this->render('users/new.twig', ['username' => $username, 'firstname' => $firstName, 'lastname' => $lastName, 'phonenumber' => $phone, 'companyname' => $company]);
     }
 
     public function edit()
@@ -87,6 +90,44 @@ class UsersController extends Controller
         $this->render('users/edit.twig', [
             'user' => $this->auth->user()
         ]);
+    }
+
+    public function editpw()
+    {
+        $this->makeSureUserIsAuthenticated();
+        //$this->app->redirect('/profile/edit/pwchange');
+        $this->render('users/newpw.twig', []);
+    }
+
+    public function updatepw()
+    {
+
+        $this->makeSureUserIsAuthenticated();
+        $user = $this->auth->user();
+
+        $request    = $this->app->request;
+        $oldpw      = $request->post('oldpw');
+        $newpw1     = $request->post('newpw1');
+        $newpw2     = $request->post('newpw2');
+        
+        $validation = new ChangePasswordValidation($user,$oldpw,$newpw1,$newpw2);
+
+        if ($validation->isGoodToGo()) {
+            $password = $newpw1;
+            $hasher = new Hash();
+            $password = $hasher->make($password);
+            $salt = $hasher->getSalt();
+            $user->setHash($password);
+            $user->setSalt($salt);
+
+            $this->userRepository->updatePassword($user);
+
+            $this->app->flashNow('info', 'Password updated.');
+            //return $this->render('users/edit.twig', ['user' => $user]);
+        }
+        $this->app->flashNow('error', join('<br>', $validation->getValidationErrors()));
+        $this->render('users/newpw.twig', []);
+        
     }
 
     public function update()
@@ -112,7 +153,7 @@ class UsersController extends Controller
             $this->userRepository->save($user);
 
             $this->app->flashNow('info', 'Your profile was successfully saved.');
-            return $this->render('users/edit.twig', ['user' => $user]);
+            //return $this->render('users/edit.twig', ['user' => $user]);
         }
 
         $this->app->flashNow('error', join('<br>', $validation->getValidationErrors()));
@@ -121,14 +162,20 @@ class UsersController extends Controller
 
     public function destroy($username)
     {
-        if ($this->userRepository->deleteByUsername($username) === 1) {
-            $this->app->flash('info', "Sucessfully deleted '$username'");
-            $this->app->redirect('/admin');
-            return;
+        if ($this->auth->isAdmin()) {
+            if ($this->userRepository->deleteByUsername($username) === 1) {
+                $this->app->flash('info', "Sucessfully deleted '$username'");
+                $this->app->redirect('/admin');
+                return;
+            }
         }
 
-        $this->app->flash('info', "An error ocurred. Unable to delete user '$username'.");
-        $this->app->redirect('/admin');
+        $this->app->flash('info', "An error ocurred. Unable to delete user '$username'. Maybe you are not an admin?");
+        if ($this->auth->isAdmin()) {
+            $this->app->redirect('/admin');
+        } else {
+            $this->app->redirect('/');
+        }
     }
 
     public function makeSureUserIsAuthenticated()

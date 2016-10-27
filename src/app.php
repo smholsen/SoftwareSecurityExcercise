@@ -56,6 +56,9 @@ $app->post('/login', $ns . 'SessionsController:create');
 
 $app->get('/logout', $ns . 'SessionsController:destroy')->name('logout');
 
+// Search
+$app->post('/search', $ns . 'SearchController:search')->name('_search');
+
 // User management
 $app->get('/users/new', $ns . 'UsersController:newuser')->name('newuser');
 $app->post('/users/new', $ns . 'UsersController:create');
@@ -67,6 +70,10 @@ $app->get('/users/:username/delete', $ns . 'UsersController:destroy');
 // Administer own profile
 $app->get('/profile/edit', $ns . 'UsersController:edit')->name('editprofile');
 $app->post('/profile/edit', $ns . 'UsersController:update');
+
+// Change own password
+$app->get('/profile/edit/pwedit', $ns . 'UsersController:editpw')->name('editpw');
+$app->post('/profile/edit/pwedit', $ns . 'UsersController:updatepw');
 
 // Patents
 $app->get('/patents', $ns . 'PatentsController:index')->name('showpatents');
