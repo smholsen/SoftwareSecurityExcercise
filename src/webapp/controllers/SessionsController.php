@@ -16,7 +16,7 @@ class SessionsController extends Controller
     {
         if ($this->auth->check()) {
             $username = $this->auth->user()->getUsername();
-            $this->app->flash('info', 'You are already logged in as ' . $username);
+            $this->app->flash('info', ["You are already logged in as " . $username]);
             $this->app->redirect('/');
             return;
         }
@@ -37,13 +37,13 @@ class SessionsController extends Controller
             setcookie("PHPSESSID",  session_id());
             $isAdmin = $this->auth->user()->isAdmin();
 
-            $this->app->flash('info', "You are now successfully logged in as $user.");
+            $this->app->flash('info', ["You are now successfully logged in as $user."]);
             $this->app->redirect('/');
             return;
         }
 
-        $this->app->flashNow('error', 'Incorrect user/pass combination.');
-        $this->render('sessions/new.twig', []);
+        $this->app->flashNow('error', ['Incorrect user/pass combination.']);
+        $this->app->render('sessions/new.twig', []);
     }
 
     public function destroy()

@@ -13,7 +13,7 @@ class SearchController extends Controller
     {
         if ($this->auth->guest()) 
         {
-            $this->app->flash("info", "You must be logged in to do that");
+            $this->app->flash("info", ["You must be logged in to do that"]);
             $this->app->redirect("/login");
 
         }else{

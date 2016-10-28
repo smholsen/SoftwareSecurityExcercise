@@ -21,7 +21,7 @@ class UsersController extends Controller
     public function show($username)
     {
         if ($this->auth->guest()) {
-            $this->app->flash("info", "You must be logged in to do that");
+            $this->app->flash("info", ["You must be logged in to do that"]);
             $this->app->redirect("/login");
 
         } else {
@@ -50,7 +50,7 @@ class UsersController extends Controller
         }
 
         $username = $this->auth->user()->getUserName();
-        $this->app->flash('info', 'You are already logged in as ' . $username);
+        $this->app->flash('info', ['You are already logged in as ' . $username]);
         $this->app->redirect('/');
     }
 
@@ -74,7 +74,7 @@ class UsersController extends Controller
             $salt = $hasher->getSalt();
             $user = new User($username, $password, $firstName, $lastName, $phone, $company, $salt);
             $this->userRepository->save($user);
-            $this->app->flash('success', "Profile successfully created. Log in to continue.");
+            $this->app->flash('success', ["Profile successfully created. Log in to continue."]);
             return $this->app->redirect('/login');
         }
 
@@ -119,13 +119,20 @@ class UsersController extends Controller
             $salt = $hasher->getSalt();
             $user->setHash($password);
             $user->setSalt($salt);
+            try {
+                $this->userRepository->updatePassword($user); 
+            } catch (Exception $e) {
+                
+                $this->app->flash('error', ["Something went wrong. Please contact the system administrator."]);
+                $this->app->redirect('/');
+            }
+            
 
-            $this->userRepository->updatePassword($user);
-
-            $this->app->flashNow('info', 'Password updated.');
+            $this->app->flashNow('success', ['Password updated.']);
             //return $this->render('users/edit.twig', ['user' => $user]);
         }
-        $this->app->flashNow('error', join('<br>', $validation->getValidationErrors()));
+        $errormessage = $validation->getValidationErrors();
+        $this->app->flashNow('error', $errormessage);
         $this->render('users/newpw.twig', []);
         
     }
@@ -152,11 +159,11 @@ class UsersController extends Controller
             $user->setLastName($lastName);
             $this->userRepository->save($user);
 
-            $this->app->flashNow('success', 'Your profile was successfully saved.');
+            $this->app->flashNow('success', ['Your profile was successfully saved.']);
             //return $this->render('users/edit.twig', ['user' => $user]);
         }
-
-        $this->app->flashNow('error', join('<br>', $validation->getValidationErrors()));
+        $errormessage = $validation->getValidationErrors();
+        $this->app->flashNow('error', $errormessage);
         $this->render('users/edit.twig', ['user' => $user]);
     }
 
@@ -164,13 +171,13 @@ class UsersController extends Controller
     {
         if ($this->auth->isAdmin()) {
             if ($this->userRepository->deleteByUsername($username) === 1) {
-                $this->app->flash('info', "Sucessfully deleted '$username'");
+                $this->app->flash('info', ["Sucessfully deleted '$username'"]);
                 $this->app->redirect('/admin');
                 return;
             }
         }
 
-        $this->app->flash('info', "An error ocurred. Unable to delete user '$username'. Maybe you are not an admin?");
+        $this->app->flash('info', ["An error ocurred. Unable to delete user '$username'. Maybe you are not an admin?"]);
         if ($this->auth->isAdmin()) {
             $this->app->redirect('/admin');
         } else {
@@ -181,7 +188,7 @@ class UsersController extends Controller
     public function makeSureUserIsAuthenticated()
     {
         if ($this->auth->guest()) {
-            $this->app->flash('info', 'You must be logged in to edit your profile.');
+            $this->app->flash('info', ['You must be logged in to edit your profile.']);
             $this->app->redirect('/login');
         }
     }

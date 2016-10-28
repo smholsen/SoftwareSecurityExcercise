@@ -85,13 +85,23 @@ class RegistrationFormValidation
             $this->validationErrors[] = "Phone number must be exactly eight digits";
         }
 
-        if(strlen($company) > 0 && (!preg_match('/[^0-9]/',$company)))
+        if(strlen($company) > 0 && (preg_match('/^[a-zA-Z\d]+$/',$company)))
         {
             $this->validationErrors[] = 'Company can only contain letters';
         }
 
-        if (preg_match('/^[A-Za-z0-9_]+$/', $username) === 0) {
+        if (ctype_alnum($username) === 0) {
             $this->validationErrors[] = 'Username can only contain letters and numbers';
+        }
+
+        if(strlen($last_name) > 0 && (preg_match('/^[a-zA-Z\d]+$/',$last_name)))
+        {
+            $this->validationErrors[] = 'Last name can only contain letters';
+        }
+
+        if(strlen($first_name) > 0 && (preg_match('/^[a-zA-Z\d]+$/',$first_name)))
+        {
+            $this->validationErrors[] = 'First name can only contain letters';
         }
     }
 }

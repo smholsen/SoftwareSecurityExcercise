@@ -25,7 +25,6 @@
                         {{ suc|e }}
                         <br>
                     {% endfor %}
-                    {{ flash.success|e }}
                     </div>
             {% endif %}
             {% if flash.error %}
@@ -36,7 +35,14 @@
                 {% endfor %}
                 </div>
             {% endif %}
-            
+            {% if flash.msg %}
+                    <div class="ui warning message">
+                        {% for msg in flash.msg %}
+                            {{ msg|e }}
+                            <br>
+                        {% endfor %}
+                    </div>
+            {% endif %}
 
 
             {% block content %}{% endblock %}
