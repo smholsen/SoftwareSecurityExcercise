@@ -7,6 +7,12 @@
             <div class="sub header">Administer this patent</div>
         </h2>
 
+        {% if flash.msg == "new" %}
+            <div class="ui warning message">
+                Patent successfully registered.
+            </div>
+        {% endif %}
+
         <table class="ui definition table">
             <tr>
                 <td>Owner</td>
